@@ -18,7 +18,7 @@ jobs:
         - name: Setup .NET Core
           uses: actions/setup-dotnet@v1
           with:
-            dotnet-version: 8.0.x
+            dotnet-version: 9.0.x
       
         - name: Restore Workloads
           run: dotnet workload restore
@@ -37,7 +37,7 @@ jobs:
           with:
             github_token: ${{ secrets.PUBLISH_TOKEN }}
             publish_branch: gh-pages
-            publish_dir: docs/Tabler.Docs.Wasm/bin/Release/net8.0/publish/wwwroot
+            publish_dir: docs/Tabler.Docs.Wasm/bin/Release/net9.0/publish/wwwroot
             allow_empty_commit: false
             keep_files: false
             force_orphan: true
