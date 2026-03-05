@@ -10,6 +10,7 @@
 
 @code {
     private string Id { get; set; } = Guid.NewGuid().ToString();
+    private bool _hasRendered;
 
     /// <summary>
     ///     If the clickhandler shall be registered when the component is rendered or when the component is clicked.
@@ -57,14 +58,19 @@
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await base.OnAfterRenderAsync(firstRender);
-        if (firstRender && Strategy == RegisterStrategy.OnRender)
+        if (firstRender)
         {
-            await JSRuntime.InvokeVoidAsync("tabBlazor.clickOutsideHandler.addEvent", Id, Concurrence == ConcurrenceStrategy.One, DotNetObjectReference.Create(this));
+            _hasRendered = true;
+            if (Strategy == RegisterStrategy.OnRender)
+            {
+                await JSRuntime.InvokeVoidAsync("tabBlazor.clickOutsideHandler.addEvent", Id, Concurrence == ConcurrenceStrategy.One, DotNetObjectReference.Create(this));
+            }
         }
     }
 
     public async ValueTask DisposeAsync()
     {
+        if (!_hasRendered) return;
         try
         {
             await JSRuntime.InvokeVoidAsync("tabBlazor.clickOutsideHandler.removeEvent", Id);
